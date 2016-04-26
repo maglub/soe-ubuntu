@@ -1,5 +1,7 @@
 # Introduction
 
+Note that this Makefile is set up to be run on an Ubuntu Linux system and requires the package "genisoimage" to be installed.
+
 * The username/password is set in my_files/kmg-ks.preseed
 
 The Makefile in this directory will:
@@ -12,6 +14,7 @@ The Makefile in this directory will:
 * Create a new iso image with your configuration, which will be an "unattended" installation
 
 ```
+sudo apt-get -y install genisoimage
 make clean
 make dist-clean
 make
@@ -70,11 +73,12 @@ VBoxManage modifyvm "$vmName" --memory 512 --acpi on --boot1 dvd --vram 33 --cpu
 VBoxManage modifyvm "$vmName" --nic1 nat --nictype1 82540EM
 VBoxManage modifyvm "$vmName" --nic2 hostonly --nictype2 82540EM --hostonlyadapter2 vboxnet0
 VBoxManage modifyvm "$vmName" --natpf1 ",tcp,,9999,,22"
+VBoxManage modifyvm "$vmName" --ostype Ubuntu_64
 VBoxManage createhd --filename "$vmDir/${vmName}.vdi" --size 8000
 VBoxManage storagectl "$vmName" --name "SATA" --add sata
 VBoxManage storageattach "$vmName" --storagectl "SATA" --port 0 --device 0 --type hdd --medium "${vmDir}/${vmName}.vdi"
 VBoxManage storagectl "$vmName" --name "IDE" --add ide
-VBoxManage storageattach "$vmName" --storagectl "IDE" --port 0 --device 0 --type dvddrive --medium "$isoImage"
+VBoxManage storageattach "$vmName" --storagectl "IDE" --port 1 --device 0 --type dvddrive --medium "$isoImage"
 
 VBoxManage showvminfo "$vmName"
 VBoxManage startvm "$vmName"
@@ -83,10 +87,29 @@ VBoxManage startvm "$vmName"
 
 * Boot and install (automatic install)
 
-* Run the following commands in the newly installed VM (ssh -p 9999 ops@localhost), with the user you have as default user in your iso image. The port 9999 is choosen above when we created the virtual machine:
+The installation will take a couple of minutes.
+
+* Attach VBoxGuesAdditions
 
 ```
-sudo apt-get -y install wget
+#--- linux:
+additionsIso=/usr/share/virtualbox/VBoxGuestAdditions.iso
+
+#--- mac: 
+additionsIso=/Applications/VirtualBox.app/Contents/MacOS/VBoxGuestAdditions.iso
+
+VBoxManage storageattach "$vmName" --storagectl "IDE"  --port 1 --device 0 --type dvddrive --medium "${additionsIso}"
+```
+
+* Connect to your newly installed VM with the user you have as default user in your iso image. The port 9999 is choosen above when we created the virtual machine, and we are ignoring the fact that your known_hosts file might be tainted by old incarnations of this ip address:
+
+```
+ssh -p 9999 -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ops@localhost
+```
+
+* Run the following commands in the newly installed VM
+
+```
 echo "vagrant ALL=(ALL) NOPASSWD:ALL" | sudo tee  /tmp/vagrant.sudoers
 sudo visudo -f /tmp/vagrant.sudoers -c && sudo chmod 600 /tmp/vagrant.sudoers && sudo mv /tmp/vagrant.sudoers /etc/sudoers.d/vagrant
 sudo useradd -m -s /bin/bash vagrant
@@ -109,10 +132,11 @@ iface eth1 inet static
 EOT
 ```
 
-* Now select the console window for your VM and select Devices->Insert Guest Additions CD
+* If you did not already mount the VBoxGuestAdditions.iso (see above), select the console window for your VM and select Devices->Insert Guest Additions CD. Then do the following to mount the DVD and install the guest additions:
 
 ```
 sudo apt-get install -y gcc build-essential
+
 sudo mount /dev/cdrom /mnt
 cd /mnt
 sudo ./VBoxLinuxAdditions.run
@@ -126,6 +150,7 @@ boxName=soe-linux
 vmName=test-vl001local
 mkdir vagrant_packages
 cd vagrant_packages
+[ -f package.box ] && rm package.box
 vagrant package --base test-vl001local
 vagrant box add $boxName package.box --force
 ```
