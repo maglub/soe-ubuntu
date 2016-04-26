@@ -1,12 +1,12 @@
 # Introduction
 
-* Note that this Makefile is set up to be run on an Ubuntu Linux system and requires the package "genisoimage" to be installed.
-* Note that there is not yet a Makefile or the support files in my_files pushed to this repo yet!
+* This Makefile is set up to be run on an Ubuntu Linux system and requires the package "genisoimage" to be installed.
 
 * The username/password is set in my_files/kmg-ks.preseed through replacing the string XXX_PASSWORD_XXX with the content of the file .password_hash
 
 The Makefile in this directory will:
 
+* Ask for a password to use for the user "ops"
 * Download the Ubuntu 16 LTS image ubuntu-16.04-server-amd64.iso
 * Create a mount point
 * Mount the image
@@ -19,6 +19,7 @@ sudo apt-get -y install genisoimage
 make clean
 make dist-clean
 make
+make soe
 ```
 
 Normally you will not need to type "make clean" or "make dist-clean"
