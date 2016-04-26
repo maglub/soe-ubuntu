@@ -1,6 +1,7 @@
 # Introduction
 
-Note that this Makefile is set up to be run on an Ubuntu Linux system and requires the package "genisoimage" to be installed.
+* Note that this Makefile is set up to be run on an Ubuntu Linux system and requires the package "genisoimage" to be installed.
+* Note that there is not yet a Makefile or the support files in my_files pushed to this repo yet!
 
 * The username/password is set in my_files/kmg-ks.preseed
 
