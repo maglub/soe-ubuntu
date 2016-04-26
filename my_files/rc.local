@@ -1,0 +1,21 @@
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+IP=$(/sbin/ifconfig eth0 | grep 'inet addr:' | cut -d: -f2 | awk '{ print $1}')
+VERSION=$(cat /etc/lsb-release | grep "^DISTRIB_DESCRIPTION" | cut -d"=" -f2 | sed -e 's/"//g')
+cat<<EOT>/etc/issue
+eth0 IP: $IP 
+$VERSION \l
+EOT
+
+exit 0
