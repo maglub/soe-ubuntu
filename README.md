@@ -52,22 +52,24 @@ label kmg
 
 # Vagrant -> set up a new vagrant image
 
-Create a VM in Virtual Box with 2 NICs
+Create a VM in Virtual Box with 2 NICs, an 8GB hard disk, and mount the iso image
 
 * Nic1 -> NAT -> Add port forwarding tcp port 2222 to 22
 * Nic2 -> Host only adapter vboxnet0
 * Mount soe-ubuntu.iso file of choice
 
 ```
+#--- choose your own vmName and isoImage location
 vmName=test-vl001local
 isoImage=/temp/ubuntu/soe-ubuntu-16.04.iso
 
+#--- copy/paste this
 VBoxManage createvm --name "$vmName" --register
 vmDir=$(VBoxManage showvminfo "$vmName" | grep "^Config file:"  | awk -F":" '{print $2}' | xargs -L1 -IX dirname "X")
 VBoxManage modifyvm "$vmName" --memory 512 --acpi on --boot1 dvd --vram 33 --cpus 1
 VBoxManage modifyvm "$vmName" --nic1 nat --nictype1 82540EM
 VBoxManage modifyvm "$vmName" --nic2 hostonly --nictype2 82540EM --hostonlyadapter2 vboxnet0
-VBoxManage modifyvm "$vmName" --natpf1 ",tcp,,2222,,22"
+VBoxManage modifyvm "$vmName" --natpf1 ",tcp,,9999,,22"
 VBoxManage createhd --filename "$vmDir/${vmName}.vdi" --size 8000
 VBoxManage storagectl "$vmName" --name "SATA" --add sata
 VBoxManage storageattach "$vmName" --storagectl "SATA" --port 0 --device 0 --type hdd --medium "${vmDir}/${vmName}.vdi"
@@ -76,15 +78,12 @@ VBoxManage storageattach "$vmName" --storagectl "IDE" --port 0 --device 0 --type
 
 VBoxManage showvminfo "$vmName"
 VBoxManage startvm "$vmName"
-VBoxManage unregistervm "$vmName" --delete
+#VBoxManage unregistervm "$vmName" --delete
 ```
 
 * Boot and install (automatic install)
-  - Choose the first NIC as the primary interface
-  - If asked, unmount /dev/sda
 
-
-* Run the following commands on the newly installed VM (ssh into the box as ops, or the user you have as default user in your iso image):
+* Run the following commands in the newly installed VM (ssh -p 9999 ops@localhost), with the user you have as default user in your iso image. The port 9999 is choosen above when we created the virtual machine:
 
 ```
 sudo apt-get -y install wget
