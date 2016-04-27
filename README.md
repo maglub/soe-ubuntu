@@ -78,7 +78,7 @@ This section will describe how you set up a VM in Virtual Box with 2 NICs, an 8G
 ```
 #--- choose your own vmName and isoImage location
 vmName=test-vl001local
-isoImage=/temp/ubuntu/soe-ubuntu-16.04.iso
+isoImage=`pwd`/soe-ubuntu-16.04.iso
 
 #--- copy/paste this
 VBoxManage createvm --name "$vmName" --register
@@ -187,6 +187,70 @@ vagrant box add $boxName package.box --force
 
 ```
 mkpasswd  -m sha-512 -S saltsalt -s <<< mySuperSecretPassword
+```
+
+# Notes concerning Apple OSX
+
+The Ubuntu ISO images are in a hybrid format, which is not directly readable on a Mac. There is a workaround to be able to mount the iso anyway. Also, there is no native mkisofs binary in OSX, so you will need to install "dvdrtoos" through Brew (http://brew.sh/)
+
+* Attach the iso image so that it gets a /dev/diskN device
+* Mount the /dev/diskN device using disk type "cd9660"
+
+```
+brew install dvdrtools
+[ -d ./mnt ] || mkdir ./mnt
+isoDevice=$(hdiutil attach -nobrowse -nomount ./ubuntu-16.04-server-amd64.iso | head -1 | cut -d" " -f1)
+mount -t cd9660 $isoDevice ./mnt
+make soe
+```
+
+* Manually create the password_hash file
+
+```
+openssl passwd -1 "P@ssw0rd" > password_hash
+```
+
+* Create your new ISO image
+
+```
+myImage=soe-ubuntu-16.04.iso
+make soe
+hdiutil makehybrid -o ${myImage} -hfs -joliet -iso ./work.dir
+```
+
+## References
+
+* https://discussions.apple.com/thread/7290705?start=0&tstart=0
+
+Display information about the image
+
+```
+hdiutil imageinfo ubuntu-16.04-server-amd64.iso
+```
+ 
+* Display the partition map
+
+```
+hdiutil pmap ubuntu-16.04-server-amd64.iso
+```
+ 
+ 
+Attach to the image but don't mount anything. It will print out the useable partitions like so:
+ 
+/dev/disk2          FDisk_partition_scheme        
+/dev/disk2s2        0xEF                          
+ 
+Since this is a hybrid image, the one I want is the first one.
+ 
+mount -t cd9660 /dev/disk2 /tmp/cd
+Where I have created /tmp/cd (as root). Now the full CD is mounted at /tmp/cd
+ 
+When I'm done, do the following...
+ 
+hdiutil detach /dev/disk2
+
+
+```
 ```
 
 # References
