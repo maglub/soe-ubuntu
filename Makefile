@@ -32,11 +32,11 @@ help:
 
 all: soe
 
-mount: $(MNT_DIR) $(MNT_DIR)/md5sum.txt
+mount: $(BASE_IMAGE) $(MNT_DIR) $(MNT_DIR)/md5sum.txt
 
 work: $(WORK_DIR)/md5sum.txt
 
-soe: $(WORK_DIR) .password_hash
+soe: $(MNT_DIR)/md5sum.txt $(WORK_DIR) .password_hash 
 	@echo "Password: $(PASSWORD)"
 	cat $(MY_FILES)/kmg-ks.cfg | sudo tee $(WORK_DIR)/kmg-ks.cfg 
 	cat $(MY_FILES)/kmg-ks.preseed | sed -e "s/XXX_USER_XXX/$(USER)/g" -e "s!XXX_PASSWORD_XXX!`cat .password_hash`!g" | sudo tee $(WORK_DIR)/kmg-ks.preseed
@@ -50,7 +50,7 @@ soe: $(WORK_DIR) .password_hash
 $(MNT_DIR): $(BASE_IMAGE) 
 	[ -d $@ ] || mkdir $@ 
 
-$(MNT_DIR)/md5sum.txt:
+$(MNT_DIR)/md5sum.txt: $(MNT_DIR)
 	sudo mount -o loop $(BASE_IMAGE) mnt
 
 $(WORK_DIR)/md5sum.txt: $(MNT_DIR)
