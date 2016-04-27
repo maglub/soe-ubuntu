@@ -2,7 +2,7 @@
 
 * This Makefile is set up to be run on an Ubuntu Linux system and requires the package "genisoimage" to be installed.
 
-* The username/password is set in my_files/kmg-ks.preseed through replacing the string XXX_PASSWORD_XXX with the content of the file .password_hash
+* The username/password is set in my_files/kmg-ks.preseed through replacing the string XXX_PASSWORD_XXX with the content of the file password_hash
 
 The Makefile in this directory will:
 
@@ -16,10 +16,15 @@ The Makefile in this directory will:
 
 ```
 sudo apt-get -y install genisoimage
+make soe
+```
+
+Other usage alternatives:
+
+```
+make
 make clean
 make dist-clean
-make
-make soe
 ```
 
 Normally you will not need to type "make clean" or "make dist-clean"
