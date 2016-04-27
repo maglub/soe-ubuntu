@@ -31,14 +31,13 @@ make dist-clean
 
 Normally you will not need to type "make clean" or "make dist-clean"
 
-# Notes
+## Notes concerning this ISO
 
-* The default user and password is configured in the my_files/kmg-ks.preseed file. See below for how to generate the hashed password
-* Info: Vagrant uses Virtual box per default, and creates a second NIC interface (eth1 in Ubuntu) with the choosen ip address in the Vagrant file. This way you will have internet access through NAT/DHCP on the primary NIC (eth0), and network access on the local host through the second interface.
-* Issue: Virtualbox does not allow direct access to the NAT interface, so one would have to set up a second NIC with a fixed IP address (or DHCP) to access the virtual machine outside Virtualbox. This makes it tricky to test the ISO + ansible 
+* When building this ISO, we default to the old way of network interface naming (eth0, ..., ethN) instead of the new naming scheme by passing arguments to the kernel at boot
+* The default user and password is configured in the my_files/kmg-ks.preseed file. See below for how to generate the hashed password if you want to create the file password_hash yourself
+* Info: Vagrant uses Virtual box per default, and creates a second NIC interface (eth1 in Ubuntu) with the choosen ip address in the Vagrant file. This way you will have internet access through NAT/DHCP on the primary NIC (eth0), and network access on the local host through the second interface. Therefore the ISO image created here will automatically choose the first available NIC (eth0) as the default network interface.
 
-The workaround is to put the following lines into my_files/kmg-ks.preseed to first tell the kernel to use the old eth scheme, and then change the interfaces file to user eth0 instead of the renamed nic.
-
+To ensure that the old network interface naming is used the workaround is to put the following lines into my_files/kmg-ks.preseed to first tell the kernel to use the old eth scheme. This will ensure that the installed VM will use the ethN naming.
 
 * my_files/kmg-ks.preseed -> tells the installer to add an entry in /etc/default/grub (the net...), which will revert to the old ethN scheme
 
@@ -46,6 +45,8 @@ The workaround is to put the following lines into my_files/kmg-ks.preseed to fir
 #--- re-enabling eth0 interface names for Ubuntu 16 LTS
 d-i debian-installer/add-kernel-opts string net.ifnames=0 biosdevname=0
 ```
+
+You will also have to make sure that the installer use the same naming scheme (ethN). Otherwise the /etc/network/interfaces file will have the wrong interface names after install.
 
 * my_files/isolinux/txt.cfg -> the append of the kernel parameters after -- tells the installer to use the old school ethN scheme
 
@@ -64,11 +65,12 @@ label kmg
 
 # Vagrant -> set up a new vagrant image
 
-Create a VM in Virtual Box with 2 NICs, an 8GB hard disk, and mount the iso image
+This section will describe how you set up a VM in Virtual Box with 2 NICs, an 8GB hard disk, mount the iso image and boot it up for installation.
 
-* Nic1 -> NAT -> Add port forwarding tcp port 2222 to 22
+* Nic1 -> NAT -> Add port forwarding tcp port 9999 to 22, so that you can easily ssh into your system with "ssh -p 9999 ops@localhost" after installation
 * Nic2 -> Host only adapter vboxnet0
 * Mount soe-ubuntu.iso file of choice
+* Boot up the VM for installation
 
 ```
 #--- choose your own vmName and isoImage location
