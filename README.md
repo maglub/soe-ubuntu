@@ -7,10 +7,10 @@ This repo will help you create an unattended install ISO file with Ubuntu 16 LTS
 * This Makefile is set up to be run on an Ubuntu Linux system and requires the package "genisoimage" to be installed.
 * The username/password is set in my_files/kmg-ks.preseed through replacing the string XXX_PASSWORD_XXX with the content of the file password_hash, which is generated when you run "make soe"
 * The resulting ISO image will be named soe-ubuntu-16.04.iso
+* The default user is "ops" unless you make the ISO with "make soe USER=XYZ"
 
 The Makefile in this directory will:
 
-* The default user is "ops" unless you make the ISO with "make soe USER=XYZ"
 * Ask for a password to use for the user "ops"
 * The Ubuntu 16.04 LTS image ubuntu-16.04-server-amd64.iso image is automatically downloaded
 * A mount point (./mnt) is created
