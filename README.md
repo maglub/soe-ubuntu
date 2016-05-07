@@ -171,7 +171,7 @@ vmName=test-vl001local
 mkdir vagrant_packages
 cd vagrant_packages
 [ -f package.box ] && rm package.box
-vagrant package --base test-vl001local
+vagrant package --base ${vmName}
 vagrant box add $boxName package.box --force
 ```
 
