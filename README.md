@@ -155,7 +155,6 @@ EOT
 
 ```
 sudo apt-get install -y gcc build-essential
-[ "$(grep DISTRIB_RELEASE=14 /etc/lsb-release | wc -l)" -gt 0 ] && { sudo apt-get -y install module-assistant ; sudo m-a prepare ; }
 
 sudo mount /dev/cdrom /mnt
 cd /mnt
