@@ -159,6 +159,7 @@ sudo apt-get install -y gcc build-essential
 sudo mount /dev/cdrom /mnt
 cd /mnt
 sudo ./VBoxLinuxAdditions.run
+sudo shutdown -r now
 ```
 
 * On your local computer (based on the assumption that your Virtualbox VM is named test-vl001local):
