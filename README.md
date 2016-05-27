@@ -215,6 +215,7 @@ openssl passwd -1 "P@ssw0rd" > password_hash
 ```
 #--- copy/paste
 brew install dvdrtools
+brew install wget
 make download # --> will download the ubuntu image
 make mnt
 isoDevice=$(hdiutil attach -nobrowse -nomount ./ubuntu-16.04-server-amd64.iso | head -1 | cut -d" " -f1)
