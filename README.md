@@ -200,7 +200,7 @@ mkpasswd  -m sha-512 -S saltsalt -s <<< mySuperSecretPassword
 The Ubuntu ISO images are in a hybrid format, which is not directly readable on a Mac. There is a workaround to be able to mount the iso anyway. Also, there is no native mkisofs binary in OSX, so you will need to install "dvdrtools" through Brew (http://brew.sh/). Also, there is no mkpasswd, so you will have to be ok with a weaker password hash. This should be ok, since you should remove the password and disable login to the bootstrap user "ops" anyway.
 
 ```
-sudo brew install dvdrtools
+brew install dvdrtools
 ```
 
 * Manually create the password_hash file
@@ -213,9 +213,6 @@ openssl passwd -1 "P@ssw0rd" > password_hash
 * Mount the /dev/diskN device using disk type "cd9660"
 
 ```
-#--- choose your password
-mySuperSecretPassword="P@ssw0rd"
-
 #--- copy/paste
 brew install dvdrtools
 make download # --> will download the ubuntu image
