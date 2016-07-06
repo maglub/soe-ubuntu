@@ -162,6 +162,18 @@ sudo ./VBoxLinuxAdditions.run
 sudo shutdown -r now
 ```
 
+* Patch and clean up
+
+```
+sudo apt-get update
+sudo apt-get -y dist-upgrade
+sudo apt-get clean
+sudo dd if=/dev/zero of=/EMPTY bs=1M
+sudo rm -f /EMPTY
+cat /dev/null > ~/.bash_history && history -c && exit
+```
+
+
 * On your local computer (based on the assumption that your Virtualbox VM is named test-vl001local):
 
 ```
