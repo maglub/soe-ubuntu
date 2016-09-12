@@ -91,6 +91,7 @@ VBoxManage modifyvm "$vmName" --nic1 nat --nictype1 82540EM
 VBoxManage modifyvm "$vmName" --nic2 hostonly --nictype2 82540EM --hostonlyadapter2 vboxnet0
 VBoxManage modifyvm "$vmName" --natpf1 ",tcp,,9999,,22"
 VBoxManage modifyvm "$vmName" --ostype Ubuntu_64
+VBoxManage modifyvm "$vmName"  --ioapic on
 VBoxManage createhd --filename "$vmDir/${vmName}.vdi" --size 8000
 VBoxManage storagectl "$vmName" --name "SATA" --add sata
 VBoxManage storageattach "$vmName" --storagectl "SATA" --port 0 --device 0 --type hdd --medium "${vmDir}/${vmName}.vdi"
