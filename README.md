@@ -8,6 +8,7 @@ This repo will help you create an unattended install ISO file with Ubuntu 16 LTS
 * The username/password is set in my_files/kmg-ks.preseed through replacing the string XXX_PASSWORD_XXX with the content of the file password_hash, which is generated when you run "make soe"
 * The resulting ISO image will be named soe-ubuntu-16.04.iso
 * The default user is "ops" unless you make the ISO with "make soe USER=XYZ"
+* If you want to use an ssh key for the ops user, copy the public key to this directory and name it "public_key"
 
 The Makefile in this directory will:
 
@@ -17,7 +18,9 @@ The Makefile in this directory will:
 * The Ubuntu ISO image is mounted on ./mnt
 * All files in ./mnt is copied to ./work.dir 
 * The files in my_files/* are copied to the proper places in ./work.dir
+* If present, the file "public_key" will be used for the ops user
 * A new iso image with your configuration is created, which you then can use for an "unattended" installation of Ubuntu 16.04 LTS
+
 
 ```
 sudo apt-get -y install genisoimage

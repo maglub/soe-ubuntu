@@ -29,5 +29,11 @@ d-i     user-setup/encrypt-home boolean false
 d-i     passwd/user-default-groups      string adm cdrom dialout lpadmin plugdev sambashare sudo
 #--- re-enabling eth0 interface names for Ubuntu 16 LTS
 d-i debian-installer/add-kernel-opts string net.ifnames=0 biosdevname=0
-#d-i preseed/late_command string sed -i /target/etc/network/interfaces -e 's/ens[^ ]*/eth0/g' 
 d-i netcfg/choose_interface select eth0
+d-i preseed/late_command string \
+    in-target mkdir -p /home/XXX_USER_XXX/.ssh; \
+    in-target /bin/sh -c "echo 'XXX_PUBLIC_KEY_XXX' >> /home/XXX_USER_XXX/.ssh/authorized_keys"; \
+    in-target chmod -R go-rwx /home/XXX_USER_XXX/authorized_keys; \
+    in-target sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config;
+
+

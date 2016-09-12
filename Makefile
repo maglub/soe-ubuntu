@@ -44,7 +44,7 @@ work: $(WORK_DIR)/md5sum.txt
 soe: password_hash $(MNT_DIR)/md5sum.txt $(WORK_DIR)
 	@echo "Password: $(PASSWORD)"
 	cat $(MY_FILES)/kmg-ks.cfg | sudo tee $(WORK_DIR)/kmg-ks.cfg 
-	cat $(MY_FILES)/kmg-ks.preseed | sed -e "s/XXX_USER_XXX/$(USER)/g" -e "s!XXX_PASSWORD_XXX!`cat password_hash`!g" | sudo tee $(WORK_DIR)/kmg-ks.preseed
+	cat $(MY_FILES)/kmg-ks.preseed | sed -e "s/XXX_USER_XXX/$(USER)/g" -e "s!XXX_PASSWORD_XXX!`cat password_hash`!g" -e "s!XXX_PUBLIC_KEY_XXX!`cat public_key`!g" | sudo tee $(WORK_DIR)/kmg-ks.preseed
 	sudo cp $(MY_FILES)/isolinux/lang $(WORK_DIR)/isolinux
 	sudo cp $(MY_FILES)/isolinux/txt.cfg $(WORK_DIR)/isolinux
 	sudo mkisofs -D -r -V "Attendless_Ubuntu" -J -l -b isolinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -z -iso-level 3 -c isolinux/isolinux.cat -o ./$(DST_IMAGE) $(WORK_DIR)
