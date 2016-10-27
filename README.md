@@ -21,13 +21,18 @@ The Makefile in this directory will:
 * If present, the file "public_key" will be used for the ops user
 * A new iso image with your configuration is created, which you then can use for an "unattended" installation of Ubuntu 16.04 LTS
 
+## Creating a SOE iso
+
+This is all you need to do to create your own SOE ISO image.
 
 ```
+git clone git@github.com:maglub/soe-ubuntu.git
+cd soe-ubuntu
 sudo apt-get -y install genisoimage
 make soe
 ```
 
-Other usage alternatives:
+## Other usage alternatives:
 
 ```
 make
