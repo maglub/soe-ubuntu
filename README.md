@@ -164,6 +164,8 @@ EOT
 
 ```
 sudo apt-get install -y gcc build-essential
+#--- alternatively
+# sudo apt-get install -y dkms gcc
 
 sudo mount /dev/cdrom /mnt
 cd /mnt
@@ -171,11 +173,18 @@ sudo ./VBoxLinuxAdditions.run
 sudo shutdown -r now
 ```
 
-* Patch and clean up
+* Patch the system
 
 ```
 sudo apt-get update
 sudo apt-get -y dist-upgrade
+sudo shutdown -r now
+```
+
+* Log in and clean up again
+
+```
+sudo dpkg -l linux-{image,headers}-"[0-9]*" | awk '/^ii/{ print $2}' | grep -vE `uname -r | awk -F"-" '{print $1"-"$2}'` | sudo xargs -L1 -IX sudo apt-get -y purge X
 sudo apt-get clean
 sudo dd if=/dev/zero of=/EMPTY bs=1M
 sudo rm -f /EMPTY
