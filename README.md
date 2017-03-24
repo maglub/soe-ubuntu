@@ -89,7 +89,7 @@ This section will describe how you set up a VM in Virtual Box with 2 NICs, an 8G
 ```
 #--- choose your own vmName and isoImage location
 vmName=test-vl001local
-isoImage=`pwd`/soe-ubuntu-16.04.iso
+isoImage=`pwd`/soe-ubuntu-16.04.2.iso
 
 #--- copy/paste this
 VBoxManage createvm --name "$vmName" --register
@@ -248,7 +248,7 @@ brew install dvdrtools
 brew install wget
 make download # --> will download the ubuntu image
 make mnt
-isoDevice=$(hdiutil attach -nobrowse -nomount ./ubuntu-16.04-server-amd64.iso | head -1 | cut -d" " -f1)
+isoDevice=$(hdiutil attach -nobrowse -nomount ./ubuntu-16.04.2-server-amd64.iso | head -1 | cut -d" " -f1)
 mount -t cd9660 $isoDevice ./mnt
 
 make soe
