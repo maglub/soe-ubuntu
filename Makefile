@@ -1,6 +1,6 @@
 MY_FILES = my_files
 DST_IMAGE = soe-ubuntu-16.04.iso
-BASE_IMAGE = ubuntu-16.04-server-amd64.iso
+BASE_IMAGE = ubuntu-16.04.2-server-amd64.iso
 WORK_DIR = work.dir
 
 USER = ops
