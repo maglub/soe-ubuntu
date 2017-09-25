@@ -248,7 +248,8 @@ brew install dvdrtools
 brew install wget
 make download # --> will download the ubuntu image
 make mnt
-isoDevice=$(hdiutil attach -nobrowse -nomount ./ubuntu-16.04.2-server-amd64.iso | head -1 | cut -d" " -f1)
+isoImage=ubuntu-16.04.3-server-amd64.iso
+isoDevice=$(hdiutil attach -nobrowse -nomount ./$isoImage | head -1 | cut -d" " -f1)
 mount -t cd9660 $isoDevice ./mnt
 
 make soe
