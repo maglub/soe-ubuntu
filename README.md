@@ -28,7 +28,7 @@ This is all you need to do to create your own SOE ISO image.
 ```
 git clone git@github.com:maglub/soe-ubuntu.git
 cd soe-ubuntu
-sudo apt-get -y install genisoimage
+sudo apt-get -y install make genisoimage
 make soe
 ```
 
