@@ -58,7 +58,7 @@ $(MNT_DIR): $(BASE_IMAGE)
 	[ -d $@ ] || mkdir $@ 
 
 $(MNT_DIR)/md5sum.txt: $(MNT_DIR)
-	sudo mount -o loop $(BASE_IMAGE) mnt
+	sudo mount -o loop $(BASE_IMAGE) $(MNT_DIR)
 
 $(WORK_DIR)/md5sum.txt: $(MNT_DIR)
 	[ -d $(WORK_DIR) ] || mkdir $(WORK_DIR) || true
