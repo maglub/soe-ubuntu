@@ -302,6 +302,16 @@ hdiutil detach /dev/disk2
 isohybrid soe-ubuntu-XXX.iso
 ```
 
+# Todo
+
+When setting up a system, using ks.preseed, we want to choose the first disk, or at least a specific one. When using m2 SSD, we don't have sda as the first disk, but /dev/nvme0n1. This might be possible with the following construct. Not yet tested.
+
+```
+d-i partman/early_command string \
+  PRIMARYDISK=$(lsblk -lbn --output SIZE,NAME | sort -n | tail -n 1 | cut -d" " -f2);\
+  debconf-set partman-auto/disk "$PRIMARYDISK";
+```
+
 # References
 
 * https://help.ubuntu.com/community/Cobbler/Preseed
