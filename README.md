@@ -28,7 +28,7 @@ This is all you need to do to create your own SOE ISO image.
 ```
 git clone git@github.com:maglub/soe-ubuntu.git
 cd soe-ubuntu
-sudo apt-get -y install make genisoimage
+sudo apt-get -y install make genisoimage syslinux-utils
 make soe
 ```
 
@@ -172,6 +172,10 @@ sudo apt-get install -y gcc build-essential
 sudo mount /dev/cdrom /mnt
 cd /mnt
 sudo ./VBoxLinuxAdditions.run
+
+#--- check version
+lsmod | grep -io vboxguest | xargs modinfo | grep -iw version
+
 sudo shutdown -r now
 ```
 
@@ -292,6 +296,12 @@ hdiutil detach /dev/disk2
 ```
 ```
 
+# Patch the iso to be bootable also as USB
+
+```
+isohybrid soe-ubuntu-XXX.iso
+```
+
 # References
 
 * https://help.ubuntu.com/community/Cobbler/Preseed
@@ -299,3 +309,4 @@ hdiutil detach /dev/disk2
 * https://www.digitalocean.com/community/tutorials/what-s-new-in-ubuntu-16-04
 
 * https://robots.thoughtbot.com/the-magic-behind-configure-make-make-install
+* isohybrid for OSX: https://gist.github.com/jsarenik/e184b4061263dbd7d3a3
