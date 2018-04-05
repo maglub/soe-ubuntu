@@ -33,5 +33,11 @@ d-i netcfg/choose_interface select eth0
 d-i preseed/late_command string \
     in-target mkdir -p /home/XXX_USER_XXX/.ssh; \
     in-target /bin/sh -c "echo 'XXX_PUBLIC_KEY_XXX' >> /home/XXX_USER_XXX/.ssh/authorized_keys"; \
+    in-target chown -R XXX_USER_XXX:XXX_USER_XXX /home/XXX_USER_XXX/.ssh; \
     in-target chmod -R go-rwx /home/XXX_USER_XXX/authorized_keys; \
-    in-target sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config;
+    in-target sed -i 's/PermitRootLogin yes/PermitRootLogin no/g' /etc/ssh/sshd_config; \
+    in-target /bin/sh -c 'echo GRUB_HIDDEN_TIMEOUT="" >> /etc/default/grub'; \
+    in-target /bin/sh -c 'echo GRUB_TIMEOUT=10 >> /etc/default/grub'; \
+    in-target /bin/sh -c 'echo GRUB_CMDLINE_LINUX_DEFAULT="nomodeset" >> /etc/default/grub'; \
+    in-target /bin/sh -c 'echo GRUB_GFXMODE=1280x1024x16 >> /etc/default/grub; update-grub'; 
+
