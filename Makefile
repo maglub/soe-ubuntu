@@ -1,7 +1,13 @@
 MY_FILES = my_files
+BASE_VERSION = 16.04
+BASE_VERSION = artful
 VERSION = 16.04.4
+VERSION = 17.10.1
+
 DST_IMAGE = soe-ubuntu-$(VERSION).iso
 BASE_IMAGE = ubuntu-$(VERSION)-server-amd64.iso
+BASE_IMAGE = ubuntu-17.10.1-server-amd64.iso
+BASE_URL = http://mirror.switch.ch/ftp/mirror/ubuntu-cdimage/$(BASE_VERSION)
 WORK_DIR = work.dir
 
 USER = ops
@@ -71,7 +77,8 @@ $(WORK_DIR)/md5sum.txt: $(MNT_DIR)
 $(WORK_DIR): $(WORK_DIR)/md5sum.txt 
 
 $(BASE_IMAGE):
-	wget "http://mirror.switch.ch/ftp/mirror/ubuntu-cdimage/16.04/$(BASE_IMAGE)"
+#	wget "http://mirror.switch.ch/ftp/mirror/ubuntu-cdimage/16.04/$(BASE_IMAGE)"
+	wget "$(BASE_URL)/$(BASE_IMAGE)"
 
 clean:
 	[ -d mnt ] && sudo umount mnt || true
