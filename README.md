@@ -296,10 +296,22 @@ hdiutil detach /dev/disk2
 ```
 ```
 
-# Patch the iso to be bootable also as USB
+# Tips and tricks
+
+## Patch the iso to be bootable also as USB
 
 ```
 isohybrid soe-ubuntu-XXX.iso
+```
+
+## Format USB stick with FAT32 in MacOS
+
+* For some applications (i.e Ultimaker 3d-printer) it is important to use the MBR partition scheme. For SOE Linux, it is sometimes useful to have a FAT32 USB.
+
+```
+diskutil list
+diskutil unmountdisk /dev/myDisk2
+sudo diskutil eraseDisk FAT32 ISO MBRFormat /dev/myDisk2
 ```
 
 # Todo
