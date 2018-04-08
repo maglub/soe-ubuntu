@@ -333,3 +333,5 @@ d-i partman/early_command string \
 * https://robots.thoughtbot.com/the-magic-behind-configure-make-make-install
 * isohybrid for OSX: https://gist.github.com/jsarenik/e184b4061263dbd7d3a3
 * preseed and disk selection: https://www.cs.waikato.ac.nz/~dbaird/work/2017/02/08/determining-disk-device-in-ubuntu-preseed/
+
+* http://mirror.switch.ch/ftp/mirror/ubuntu-cdimage/artful/
