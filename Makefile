@@ -80,6 +80,11 @@ soe: password_hash $(MNT_DIR)/md5sum.txt $(WORK_DIR)
 	sudo mkisofs -D -r -V "Attendless_Ubuntu" -J -l -b isolinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -z -iso-level 3 -c isolinux/isolinux.cat -o ./$(DST_IMAGE) $(WORK_DIR)
 	sudo chown $(CUR_USER):$(CUR_GROUP) $(DST_IMAGE)
 	sudo umount $(MNT_DIR)
+ifeq ($(OS),Darwin)
+	./isohybrid.pl $(DST_IMAGE)
+else
+	isohybrid $(DST_IMAGE)
+endif
 
 #=====================================================
 # Atomic rules
