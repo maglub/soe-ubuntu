@@ -1,3 +1,13 @@
+#=======================================================
+# Makefile for soe-ubuntu
+#
+# Description: This makefile works on Linux and MacOS
+#
+# Dependencies:
+#   - MacOS: brew, brew packages: dvdrtools
+#
+#=======================================================
+
 MY_FILES = my_files
 BASE_VERSION = 16.04
 #BASE_VERSION = artful
@@ -18,6 +28,12 @@ PROXY_PORT = 3142
 
 MNT_DIR = mnt
 
+OS := $(shell uname)
+
+CUR_USER := $(shell id -u)
+CUR_GROUP := $(shell id -g)
+
+
 help:
 	@echo "Usage:"
 	@echo ""
@@ -37,7 +53,11 @@ help:
 
 
 password_hash:
+ifeq ($(OS),Darwin)
+	openssl passwd -1 "P@ssw0rd" > password_hash
+else
 	mkpasswd  -m sha-512 -S $(SALT)  > password_hash
+endif
 
 all: soe
 
@@ -58,6 +78,7 @@ soe: password_hash $(MNT_DIR)/md5sum.txt $(WORK_DIR)
 	sudo cp $(MY_FILES)/isolinux/lang $(WORK_DIR)/isolinux
 	sudo cp $(MY_FILES)/isolinux/txt.cfg $(WORK_DIR)/isolinux
 	sudo mkisofs -D -r -V "Attendless_Ubuntu" -J -l -b isolinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -z -iso-level 3 -c isolinux/isolinux.cat -o ./$(DST_IMAGE) $(WORK_DIR)
+	sudo chown $(CUR_USER):$(CUR_GROUP) $(DST_IMAGE)
 	sudo umount $(MNT_DIR)
 
 #=====================================================
@@ -67,7 +88,16 @@ $(MNT_DIR): $(BASE_IMAGE)
 	[ -d $@ ] || mkdir $@ 
 
 $(MNT_DIR)/md5sum.txt: $(MNT_DIR)
+ifeq ($(OS),Darwin)
+	#--- this is a sequence where the semicolon and backslash is extremely important
+	set -e ;\
+	ISO_DEVICE=$$(hdiutil attach -nobrowse -nomount ./$(BASE_IMAGE) | head -1 | cut -d" " -f1) ;\
+	echo "iso $$ISO_DEVICE" ;\
+	mount -t cd9660 $$ISO_DEVICE $(MNT_DIR)
+
+else
 	sudo mount -o loop $(BASE_IMAGE) $(MNT_DIR)
+endif
 
 $(WORK_DIR)/md5sum.txt: $(MNT_DIR)
 	[ -d $(WORK_DIR) ] || mkdir $(WORK_DIR) || true

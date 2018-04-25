@@ -261,6 +261,11 @@ mount -t cd9660 $isoDevice ./mnt
 make soe
 ```
 
+## Special considerations
+
+* This image will boot without framebuffer, i.e  GRUB_CMDLINE_LINUX_DEFAULT="nomodeset" in /etc/default/grub
+
+
 ## References
 
 * https://discussions.apple.com/thread/7290705?start=0&tstart=0
@@ -335,3 +340,7 @@ d-i partman/early_command string \
 * preseed and disk selection: https://www.cs.waikato.ac.nz/~dbaird/work/2017/02/08/determining-disk-device-in-ubuntu-preseed/
 
 * http://mirror.switch.ch/ftp/mirror/ubuntu-cdimage/artful/
+
+* https://stackoverflow.com/questions/23711087/makefile-ifeq-with-bash-commands-on-os-x
+* https://gist.github.com/jsarenik/e184b4061263dbd7d3a3
+* https://gist.githubusercontent.com/jsarenik/e184b4061263dbd7d3a3/raw/861da48e3f32138400cf966ca0d498e67575ce0d/isohybrid.pl
