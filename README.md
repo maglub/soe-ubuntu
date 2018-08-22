@@ -90,6 +90,7 @@ This section will describe how you set up a VM in Virtual Box with 2 NICs, an 8G
 #--- choose your own vmName and isoImage location
 vmName=test-vl001local
 isoImage=`pwd`/ubuntu-16.04.4-server-amd64.iso
+isoImage=`pwd`/soe-ubuntu-16.04.4.iso
 
 #--- copy/paste this
 VBoxManage createvm --name "$vmName" --register
