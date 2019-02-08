@@ -9,22 +9,30 @@
 #=======================================================
 
 MY_FILES = my_files
-BASE_VERSION = 16.04
-#BASE_VERSION = 18.04
+#BASE_VERSION = 16.04
+BASE_VERSION = 18.04
 #BASE_VERSION = artful
-VERSION = 16.04.5
+#VERSION = 16.04.5
 #VERSION = 17.10.1
-#VERSION = 18.04-live
+#VERSION = 18.04.1-live
+VERSION = 18.04.1
 
 DST_IMAGE = soe-ubuntu-$(VERSION).iso
 BASE_IMAGE = ubuntu-$(VERSION)-server-amd64.iso
+
+#--- 16.04.1 use the following URL
 BASE_URL = http://mirror.switch.ch/ftp/mirror/ubuntu-cdimage/$(BASE_VERSION)
-BASE_URL = http://mirror.switch.ch/ftp/mirror/ubuntu-cdimage/$(BASE_VERSION)
+
+#--- 18.04.1 use the following URL
+#BASE_URL = http://cdimage.ubuntu.com/releases/$(VERSION)/release
+
 WORK_DIR = work.dir
 
 USER = ops
 PASSWORD = password
 SALT = saltsalt
+
+TIMEZONE = Europe/Zurich
 
 PROXY_URL = 10.0.20.5
 PROXY_PORT = 3142
@@ -75,12 +83,17 @@ work: $(WORK_DIR)/md5sum.txt
 
 soe: password_hash $(MNT_DIR)/md5sum.txt $(WORK_DIR)
 	@echo "Password: $(PASSWORD)"
-	cat $(MY_FILES)/kmg-ks.cfg | sudo tee $(WORK_DIR)/kmg-ks.cfg 
-	cat $(MY_FILES)/kmg-ks.preseed | sed -e "s/XXX_USER_XXX/$(USER)/g" -e "s!XXX_PASSWORD_XXX!`cat password_hash`!g" -e "s!XXX_PUBLIC_KEY_XXX!`cat public_key`!g" | sudo tee $(WORK_DIR)/kmg-ks.preseed
+	#cat $(MY_FILES)/$(BASE_VERSION)/kmg-ks.cfg | sudo tee $(WORK_DIR)/kmg-ks.cfg 
+	cat $(MY_FILES)/$(BASE_VERSION)/kmg-ks.preseed | sed -e "s/XXX_USER_XXX/$(USER)/g" -e "s/XXX_PASSWORD_XXX/`cat password_hash`/g" -e "s/XXX_PUBLIC_KEY_XXX/`cat public_key`/g" -e "s,XXX_TIMEZONE_XXX,$(TIMEZONE),g" | sudo tee $(WORK_DIR)/kmg-ks.preseed
+	sudo cp $(MY_FILES)/$(BASE_VERSION)/show-ip-address $(WORK_DIR)/show-ip-address
 #	cat $(MY_FILES)/proxy.template | sed -e "s/XXX_PROXY_URL_XXX/$(PROXY_URL)/g" -e "s/XXX_PROXY_PORT_XXX/$(PROXY_PORT)/g" | sudo tee -a $(WORK_DIR)/kmg-ks.preseed
 	sudo cp $(MY_FILES)/isolinux/lang $(WORK_DIR)/isolinux
-	sudo cp $(MY_FILES)/isolinux/txt.cfg $(WORK_DIR)/isolinux
+	cat $(MY_FILES)/isolinux/txt.cfg | sed -e "s!XXX_PRESEED_CHECKSUM_XXX!`md5 -r $(WORK_DIR)/kmg-ks.preseed | cut -d" " -f 1`!" | sudo tee $(WORK_DIR)/isolinux/txt.cfg
+	cat $(WORK_DIR)/isolinux/txt.cfg
 	sudo mkisofs -D -r -V "Attendless_Ubuntu" -J -l -b isolinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -z -iso-level 3 -c isolinux/isolinux.cat -o ./$(DST_IMAGE) $(WORK_DIR)
+	sudo mkisofs -U -A "Custom1804" -V "Custom1804" -volset "Custom1804" -J -joliet-long -r -v -T -o ./dual.$(DST_IMAGE) -b isolinux/isolinux.bin -c isolinux/isolinux.cat -no-emul-boot -boot-load-size 4 -boot-info-table -eltorito-alt-boot -e boot/grub/efi.img -no-emul-boot $(WORK_DIR)
+
+
 	sudo chown $(CUR_USER):$(CUR_GROUP) $(DST_IMAGE)
 	sudo umount $(MNT_DIR)
 ifeq ($(OS),Darwin)
