@@ -92,7 +92,6 @@ d-i cdrom-detect/eject                                      boolean     true
 d-i debian-installer/exit/halt                              boolean     false
 d-i debian-installer/exit/poweroff                          boolean     false
 
-
 d-i preseed/late_command string \
     in-target mkdir -p /home/XXX_USER_XXX/.ssh; \
     in-target /bin/sh -c "echo 'XXX_PUBLIC_KEY_XXX' >> /home/XXX_USER_XXX/.ssh/authorized_keys"; \
@@ -109,7 +108,3 @@ d-i preseed/late_command string \
     cp /cdrom/show-ip-address /target/etc/network/if-up.d/show-ip-address ; \
     in-target chmod 755 /etc/network/if-up.d/show-ip-address;
      
-
-#--- show-ip-address is sort of a hack, which was previously inlined with EOF in ks.cfg
-
-

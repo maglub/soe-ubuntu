@@ -147,7 +147,6 @@ $(WORK_DIR)/md5sum.txt: $(MNT_DIR)
 $(WORK_DIR): $(WORK_DIR)/md5sum.txt 
 
 $(BASE_IMAGE):
-#	wget "http://mirror.switch.ch/ftp/mirror/ubuntu-cdimage/$(BASE_VERSION)/$(BASE_IMAGE)"
 	wget "$(BASE_URL)/$(BASE_IMAGE)"
 
 clean:
