@@ -32,7 +32,7 @@ else
 	BASE_URL=http://cdimage.ubuntu.com/releases/$(BASE_VERSION)/release
 endif
 
-WORK_DIR = work.dir
+WORK_DIR = work.$(RELEASE)
 
 USER = ops
 #PASSWORD = P@ssw0rd
@@ -159,5 +159,6 @@ clean:
 	[ -f password_hash ] && rm password_hash || true
 
 dist-clean: clean
+	[ -d work.16 ] && sudo rm -rf work.16 || true
+	[ -d work.18 ] && sudo rm -rf work.18 || true
 	[ -f $(DST_IMAGE) ] && sudo rm $(DST_IMAGE) || true
-
