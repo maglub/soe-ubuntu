@@ -337,6 +337,8 @@ d-i partman/early_command string \
 
 # References
 
+* https://github.com/netson/ubuntu-unattended
+
 * https://help.ubuntu.com/community/Cobbler/Preseed
 * https://help.ubuntu.com/lts/installation-guide/example-preseed.txt
 * https://www.digitalocean.com/community/tutorials/what-s-new-in-ubuntu-16-04
