@@ -161,4 +161,5 @@ clean:
 dist-clean: clean
 	[ -d work.16 ] && sudo rm -rf work.16 || true
 	[ -d work.18 ] && sudo rm -rf work.18 || true
-	[ -f $(DST_IMAGE) ] && sudo rm $(DST_IMAGE) || true
+	sudo rm soe-ubuntu-16.04.?.iso 2>/dev/null || true
+	sudo rm soe-ubuntu-18.04.?.iso 2>/dev/null || true
