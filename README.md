@@ -118,6 +118,7 @@ To start over, delete the VM with this:
 
 ```
 VBoxManage controlvm "$vmName"  poweroff 
+sleep 1
 VBoxManage unregistervm "$vmName" --delete
 ```
 
