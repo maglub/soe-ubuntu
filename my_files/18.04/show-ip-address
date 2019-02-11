@@ -1,0 +1,15 @@
+#!/bin/sh
+if [ "$METHOD" = loopback ]; then
+exit 0
+fi
+
+# Only run from ifup.
+if [ "$MODE" != start ]; then
+exit 0
+fi
+
+IP=$(/sbin/ip a | /bin/grep -v "127.0.0.1" | /usr/bin/awk '/inet / { print $2 }' | sed -e 's!/.*!!')
+VERSION=$(. /etc/lsb-release ; echo $DISTRIB_DESCRIPTION)
+echo "IP: $IP" > /etc/issue
+echo "$VERSION \l" >> /etc/issue
+

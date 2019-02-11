@@ -1,3 +1,12 @@
+# regional setting
+d-i debian-installer/language                               string      en_US:en
+d-i debian-installer/country                                string      US
+d-i debian-installer/locale                                 string      en_US
+d-i debian-installer/splash                                 boolean     false
+d-i localechooser/supported-locales                         multiselect en_US.UTF-8
+d-i pkgsel/install-language-support                         boolean     true
+
+
 #d-i partman-auto/disk string /dev/sda
 d-i partman-auto/method string lvm
 d-i partman-auto-lvm/guided_size string max
@@ -39,5 +48,4 @@ d-i preseed/late_command string \
     in-target /bin/sh -c 'echo GRUB_HIDDEN_TIMEOUT="" >> /etc/default/grub'; \
     in-target /bin/sh -c 'echo GRUB_TIMEOUT=10 >> /etc/default/grub'; \
     in-target /bin/sh -c 'echo GRUB_CMDLINE_LINUX_DEFAULT="nomodeset" >> /etc/default/grub'; \
-    in-target /bin/sh -c 'echo GRUB_GFXMODE=1280x1024x16 >> /etc/default/grub; update-grub'; 
-
+    in-target /bin/sh -c 'echo GRUB_GFXMODE=1280x1024x16 >> /etc/default/grub; update-grub'; \
