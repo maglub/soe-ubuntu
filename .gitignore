@@ -1,5 +1,7 @@
 *.iso
 work.dir
+work.16
+work.dir
 mnt
 password_hash
 public_key
