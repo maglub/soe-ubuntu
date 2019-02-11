@@ -1,9 +1,19 @@
 # Introduction
 
-This repo will help you create an unattended install ISO file with Ubuntu 16 LTS or 18 LTS where the default user is "ops" and you choose a password for the user when you build the ISO.
+This repo will help you create an unattended minimal install ISO file with Ubuntu 16 LTS or 18 LTS where the default user is "ops" and you choose a password for the user when you build the ISO.
+
+This repo works on:
+
+* Ubuntu 16
+* Ubuntu 18
+* OSX (Mac)
+
+
+Definitions and requirements:
 
 * SOE = Standard Operating Environment
-* We use this image as a bare minimum for what Ansible need to bootstrap our servers
+* We use "eth0, eth1" for network interface naming (see https://www.freedesktop.org/wiki/Software/systemd/PredictableNetworkInterfaceNames/). For VMs that rarely change hardware setup, using the old naming convention is quite convenient.
+* We have configured this image to be as lightweight as possible, for what Ansible need to bootstrap our servers
 * This Makefile is set up to be run on an Ubuntu Linux system and requires the package "genisoimage" to be installed.
 * The username/password is set in my_files/kmg-ks.preseed through replacing the string XXX_PASSWORD_XXX with the content of the file password_hash, which is generated when you run "make soe"
 * The resulting ISO image will be named soe-ubuntu-<VERSION>.iso
