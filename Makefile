@@ -59,6 +59,7 @@ help:
 
 	@echo ""
 	@echo "#--- some helpful stuff"
+	@echo "make download    # will download the ubuntu iso"
 	@echo "make mnt         # will download the ubuntu iso and mount it on ./mnt"
 	@echo ""
 	@echo "#--- Variables - as set right now"
@@ -66,15 +67,13 @@ help:
 	@echo "RELEASE      = $(RELEASE)"
 	@echo "BASE_VERSION = $(BASE_VERSION)"
 	@echo "VERSION      = $(VERSION)"
+	@echo "ISO          = $(BASE_URL)/$(BASE_IMAGE)"
 
 	@echo ""
 	@echo "#--- the magic"
 	@echo "make soe RELEASE=16   # will copy the files in my_files and create the image for Ubuntu 16"
 	@echo "make soe              # will copy the files in my_files and create the image for Ubuntu 18"
 	@echo "make soe USER=$(USER) # will copy the files in my_files and create the image using $(USER) as credentials for the default user"
-
-	@echo "Debug: $(ASD)"
-
 
 password_hash:
 ifeq ($(OS),Darwin)
