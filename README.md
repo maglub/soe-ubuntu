@@ -36,11 +36,27 @@ The Makefile in this directory will:
 
 This is all you need to do to create your own SOE ISO image.
 
+
+* Prereqs for Linux
+
 ```
+sudo apt-get -y install make genisoimage syslinux-utils git
 git clone git@github.com:maglub/soe-ubuntu.git
 cd soe-ubuntu
-sudo apt-get -y install make genisoimage syslinux-utils
+```
 
+* Prereqs for OSX (Mac)
+
+You will need to have _brew_ installed: https://brew.sh/
+
+```
+brew install dvdrtools
+brew install wget
+```
+
+* Quick description of using this Makefile
+
+```
 #--- get some help
 make
 
@@ -259,30 +275,13 @@ mkpasswd  -m sha-512 -S saltsalt -s <<< mySuperSecretPassword
 
 # Notes concerning Apple OSX
 
-The Ubuntu ISO images are in a hybrid format, which is not directly readable on a Mac. There is a workaround to be able to mount the iso anyway. Also, there is no native mkisofs binary in OSX, so you will need to install "dvdrtools" through Brew (http://brew.sh/). Also, there is no mkpasswd, so you will have to be ok with a weaker password hash. This should be ok, since you should remove the password and disable login to the bootstrap user "ops" anyway.
+The Ubuntu ISO images are in a hybrid format, which is not directly readable on a Mac. There is a workaround to be able to mount the iso anyway. Also, there is no native mkisofs binary in OSX, so you will need to install "dvdrtools" through Brew (http://brew.sh/).
 
-```
-brew install dvdrtools
-```
-
-* Manually create the password_hash file
-
-```
-openssl passwd -1 "P@ssw0rd" > password_hash
-```
-
-* Attach the iso image so that it gets a /dev/diskN device
-* Mount the /dev/diskN device using disk type "cd9660"
 
 ```
 #--- copy/paste
 brew install dvdrtools
 brew install wget
-make download # --> will download the ubuntu image
-make mnt
-isoImage=ubuntu-16.04.3-server-amd64.iso
-isoDevice=$(hdiutil attach -nobrowse -nomount ./$isoImage | head -1 | cut -d" " -f1)
-mount -t cd9660 $isoDevice ./mnt
 
 make soe
 ```
