@@ -90,7 +90,8 @@ This section will describe how you set up a VM in Virtual Box with 2 NICs, an 8G
 #--- choose your own vmName and isoImage location
 vmName=test-vl001local
 isoImage=`pwd`/ubuntu-16.04.4-server-amd64.iso
-isoImage=`pwd`/soe-ubuntu-16.04.4.iso
+isoImage=`pwd`/soe-ubuntu-16.04.5.iso
+isoImage=`pwd`/soe-ubuntu-18.04.1.iso
 
 #--- copy/paste this
 VBoxManage createvm --name "$vmName" --register
@@ -111,9 +112,13 @@ VBoxManage storageattach "$vmName" --storagectl "IDE" --port 1 --device 0 --type
 
 VBoxManage showvminfo "$vmName"
 VBoxManage startvm "$vmName"
+```
 
-#VBoxManage controlvm "$vmName"  poweroff 
-#VBoxManage unregistervm "$vmName" --delete
+To start over, delete the VM with this:
+
+```
+VBoxManage controlvm "$vmName"  poweroff 
+VBoxManage unregistervm "$vmName" --delete
 ```
 
 * Boot and install (automatic install)
