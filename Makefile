@@ -35,8 +35,9 @@ endif
 WORK_DIR = work.dir
 
 USER = ops
-PASSWORD = password
+#PASSWORD = P@ssw0rd
 SALT = saltsalt
+
 
 TIMEZONE = Europe/Zurich
 
@@ -49,6 +50,9 @@ OS := $(shell uname)
 
 CUR_USER := $(shell id -u)
 CUR_GROUP := $(shell id -g)
+
+#ASK_PASSWORD ?= $(shell stty -echo; read -p "$(USER) Password: " pwd; stty echo; echo $$pwd)
+#PASSWORD := $(ASK_PASSWORD)
 
 
 help:
@@ -77,7 +81,8 @@ help:
 
 password_hash:
 ifeq ($(OS),Darwin)
-	openssl passwd -1 "P@ssw0rd" > password_hash
+	$(eval PASSWORD := $(shell stty -echo; read -p "$(USER) Password: " pwd; stty echo; echo $$pwd))
+	openssl passwd -1 -salt "$(SALT)" "$(PASSWORD)" > password_hash
 else
 	mkpasswd  -m sha-512 -S $(SALT)  > password_hash
 endif
@@ -94,8 +99,6 @@ umount:
 work: $(WORK_DIR)/md5sum.txt
 
 soe: password_hash $(MNT_DIR)/md5sum.txt $(WORK_DIR)
-	@echo "Password: $(PASSWORD)"
-	#cat $(MY_FILES)/$(BASE_VERSION)/kmg-ks.cfg | sudo tee $(WORK_DIR)/kmg-ks.cfg 
 	cat $(MY_FILES)/$(BASE_VERSION)/kmg-ks.preseed | sed -e "s/XXX_USER_XXX/$(USER)/g" -e "s,XXX_PASSWORD_XXX,`cat password_hash`,g" -e "s/XXX_PUBLIC_KEY_XXX/`cat public_key`/g" -e "s,XXX_TIMEZONE_XXX,$(TIMEZONE),g" | sudo tee $(WORK_DIR)/kmg-ks.preseed
 	sudo cp $(MY_FILES)/$(BASE_VERSION)/show-ip-address $(WORK_DIR)/show-ip-address
 
@@ -153,8 +156,8 @@ clean:
 	[ -d $(WORK_DIR) ] && sudo rm -rf $(WORK_DIR) || true
 	[ -d mnt ] && sudo umount mnt || true
 	[ -d mnt ] && rmdir mnt || true
+	[ -f password_hash ] && rm password_hash || true
 
 dist-clean: clean
-	[ -f password_hash ] && rm password_hash || true
 	[ -f $(DST_IMAGE) ] && sudo rm $(DST_IMAGE) || true
 

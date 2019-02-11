@@ -1,19 +1,20 @@
 # Introduction
 
-This repo will help you create an unattended install ISO file with Ubuntu 16 LTS where the default user is "ops" and you choose a password for the user when you build the ISO. 
+This repo will help you create an unattended install ISO file with Ubuntu 16 LTS or 18 LTS where the default user is "ops" and you choose a password for the user when you build the ISO.
 
 * SOE = Standard Operating Environment
 * We use this image as a bare minimum for what Ansible need to bootstrap our servers
 * This Makefile is set up to be run on an Ubuntu Linux system and requires the package "genisoimage" to be installed.
 * The username/password is set in my_files/kmg-ks.preseed through replacing the string XXX_PASSWORD_XXX with the content of the file password_hash, which is generated when you run "make soe"
-* The resulting ISO image will be named soe-ubuntu-16.04.iso
+* The resulting ISO image will be named soe-ubuntu-<VERSION>.iso
 * The default user is "ops" unless you make the ISO with "make soe USER=XYZ"
 * If you want to use an ssh key for the ops user, copy the public key to this directory and name it "public_key"
 
 The Makefile in this directory will:
 
 * Ask for a password to use for the user "ops"
-* The Ubuntu 16.04 LTS image ubuntu-16.04-server-amd64.iso image is automatically downloaded
+* The Ubuntu 16.04 LTS image ubuntu-16.04.5-server-amd64.iso image is automatically downloaded
+* The Ubuntu 18.04 LTS image ubuntu-18.04.1-server-amd64.iso image is automatically downloaded
 * A mount point (./mnt) is created
 * The Ubuntu ISO image is mounted on ./mnt
 * All files in ./mnt is copied to ./work.dir 
@@ -29,7 +30,15 @@ This is all you need to do to create your own SOE ISO image.
 git clone git@github.com:maglub/soe-ubuntu.git
 cd soe-ubuntu
 sudo apt-get -y install make genisoimage syslinux-utils
+
+#--- get some help
+make
+
+#--- generate the latest Ubuntu LTS image
 make soe
+
+#--- generate an older Ubuntu LTS image
+make soe RELEASE=16
 ```
 
 ## Other usage alternatives:
