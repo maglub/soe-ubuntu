@@ -17,7 +17,7 @@ ifeq ($(RELEASE),16)
 	VERSION = 16.04.5
 else
 	BASE_VERSION = 18.04
-	VERSION = 18.04.1
+	VERSION = 18.04.2
 endif
 
 DST_IMAGE = soe-ubuntu-$(VERSION).iso
