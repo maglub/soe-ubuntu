@@ -354,6 +354,13 @@ d-i partman/early_command string \
   debconf-set partman-auto/disk "$PRIMARYDISK";
 ```
 
+Alternatives:
+
+```
+lsblk -lbn --output MAJ:MIN,TYPE,NAME | grep disk | sort -n | head -1 | tr " " "\n" | tail -1
+```
+
+
 # References
 
 * https://github.com/netson/ubuntu-unattended
