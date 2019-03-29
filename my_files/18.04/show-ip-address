@@ -8,6 +8,9 @@ if [ "$MODE" != start ]; then
 exit 0
 fi
 
+#--- if netplan is slowly giving an ip address
+[ -f /etc/netplan/01-netcfg.yaml ] && sleep 1
+
 IP=$(/sbin/ip a | /bin/grep -v "127.0.0.1" | /usr/bin/awk '/inet / { print $2 }' | sed -e 's!/.*!!')
 VERSION=$(. /etc/lsb-release ; echo $DISTRIB_DESCRIPTION)
 echo "IP: $IP" > /etc/issue

@@ -65,6 +65,12 @@ d-i pkgsel/update-policy                                    select      none
 d-i pkgsel/updatedb                                         boolean     true
 
 # disk partitioning
+# disk partitioning
+d-i partman/early_command string \
+  PRIMARYDISK=$(parted_devices | head -1 | cut -f1);\
+  debconf-set partman-auto/disk "$PRIMARYDISK";\
+  debconf-set grub-installer/bootdev "$PRIMARYDISK";
+
 d-i partman/confirm_write_new_label                         boolean     true
 d-i partman/choose_partition                                select      finish
 d-i partman/confirm_nooverwrite                             boolean     true
@@ -84,7 +90,6 @@ d-i partman-partitioning/confirm_write_new_label            boolean     true
 # grub boot loader
 d-i grub-installer/only_debian                              boolean     true
 d-i grub-installer/with_other_os                            boolean     true
-
 # finish installation
 d-i finish-install/reboot_in_progress                       note
 d-i finish-install/keep-consoles                            boolean     false
