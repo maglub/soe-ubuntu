@@ -99,7 +99,7 @@ umount:
 work: $(WORK_DIR)/md5sum.txt
 
 soe: password_hash $(MNT_DIR)/md5sum.txt $(WORK_DIR)
-	cat $(MY_FILES)/$(BASE_VERSION)/kmg-ks.preseed | sed -e "s/XXX_USER_XXX/$(USER)/g" -e "s,XXX_PASSWORD_XXX,`cat password_hash`,g" -e "s/XXX_PUBLIC_KEY_XXX/`cat public_key`/g" -e "s,XXX_TIMEZONE_XXX,$(TIMEZONE),g" | sudo tee $(WORK_DIR)/kmg-ks.preseed
+	cat $(MY_FILES)/$(BASE_VERSION)/kmg-ks.preseed | sed -e "s/XXX_USER_XXX/$(USER)/g" -e "s,XXX_PASSWORD_XXX,`cat password_hash`,g" -e "s,XXX_PUBLIC_KEY_XXX,`cat public_key`,g" -e "s,XXX_TIMEZONE_XXX,$(TIMEZONE),g" | sudo tee $(WORK_DIR)/kmg-ks.preseed
 	sudo cp $(MY_FILES)/$(BASE_VERSION)/show-ip-address $(WORK_DIR)/show-ip-address
 
 #--- only for proxy based installations
