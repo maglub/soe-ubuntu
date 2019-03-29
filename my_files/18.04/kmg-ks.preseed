@@ -66,11 +66,19 @@ d-i pkgsel/updatedb                                         boolean     true
 
 # disk partitioning
 # disk partitioning
+#--- filter away mapper devices, sort it so that nvme devices has precedence over sd devices
 d-i partman/early_command string \
-  PRIMARYDISK=$(parted_devices | head -1 | cut -f1);\
-  debconf-set partman-auto/disk "$PRIMARYDISK";\
-  debconf-set grub-installer/bootdev "$PRIMARYDISK";
+  USBDEV=$(list-devices usb-partition | sed "s/\(.*\)./\1/" | sort -u );\
+  BOOTDEV=$(list-devices disk | grep -v "$USBDEV" | head -1 );\
+  debconf-set partman-auto/disk $BOOTDEV;\
+  debconf-set grub-installer/bootdev $BOOTDEV; \
+  umount /media;
 
+#  PRIMARYDISK=$( parted_devices | grep -v mapper | sort | head -1 | cut -f1);\
+#  debconf-set partman-auto/disk "$PRIMARYDISK";\
+#  debconf-set grub-installer/bootdev "$PRIMARYDISK";
+
+d-i partman/unmount_active boolean false
 d-i partman/confirm_write_new_label                         boolean     true
 d-i partman/choose_partition                                select      finish
 d-i partman/confirm_nooverwrite                             boolean     true
