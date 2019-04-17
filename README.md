@@ -127,6 +127,7 @@ vmName=test-vl001local
 isoImage=`pwd`/ubuntu-16.04.5-server-amd64.iso
 isoImage=`pwd`/soe-ubuntu-16.04.5.iso
 isoImage=`pwd`/soe-ubuntu-18.04.1.iso
+isoImage=`pwd`/soe-ubuntu-18.04.2.iso
 
 #--- copy/paste this
 VBoxManage createvm --name "$vmName" --register
