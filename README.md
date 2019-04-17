@@ -139,7 +139,7 @@ VBoxManage modifyvm "$vmName" --cableconnected2 on
 VBoxManage modifyvm "$vmName" --natpf1 ",tcp,,9999,,22"
 VBoxManage modifyvm "$vmName" --ostype Ubuntu_64
 VBoxManage modifyvm "$vmName"  --ioapic on
-VBoxManage createhd --filename "$vmDir/${vmName}.vdi" --size 12000
+VBoxManage createhd --filename "$vmDir/${vmName}.vdi" --size 20000
 VBoxManage storagectl "$vmName" --name "SATA" --add sata
 VBoxManage storageattach "$vmName" --storagectl "SATA" --port 0 --device 0 --type hdd --medium "${vmDir}/${vmName}.vdi"
 VBoxManage storagectl "$vmName" --name "IDE" --add ide
