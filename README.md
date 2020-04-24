@@ -132,7 +132,7 @@ isoImage=`pwd`/soe-ubuntu-18.04.2.iso
 #--- copy/paste this
 VBoxManage createvm --name "$vmName" --register
 vmDir=$(VBoxManage showvminfo "$vmName" | grep "^Config file:"  | awk -F":" '{print $2}' | xargs -L1 -IX dirname "X")
-VBoxManage modifyvm "$vmName" --memory 512 --acpi on --boot1 dvd --vram 33 --cpus 1
+VBoxManage modifyvm "$vmName" --memory 762 --acpi on --boot1 dvd --vram 33 --cpus 1
 VBoxManage modifyvm "$vmName" --nic1 nat --nictype1 82540EM
 VBoxManage modifyvm "$vmName" --nic2 hostonly --nictype2 82540EM --hostonlyadapter2 vboxnet0
 VBoxManage modifyvm "$vmName" --cableconnected1 on
