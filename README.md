@@ -341,8 +341,9 @@ isohybrid soe-ubuntu-XXX.iso
 
 ```
 diskutil list
-diskutil unmountdisk /dev/myDisk2
-sudo diskutil eraseDisk FAT32 ISO MBRFormat /dev/myDisk2
+disk=mydisk2
+diskutil unmountdisk /dev/$disk
+sudo diskutil eraseDisk FAT32 ISO MBRFormat /dev/$disk
 ```
 
 # Todo
