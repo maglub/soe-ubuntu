@@ -145,6 +145,8 @@ VBoxManage storagectl "$vmName" --name "SATA" --add sata
 VBoxManage storageattach "$vmName" --storagectl "SATA" --port 0 --device 0 --type hdd --medium "${vmDir}/${vmName}.vdi"
 VBoxManage storagectl "$vmName" --name "IDE" --add ide
 VBoxManage storageattach "$vmName" --storagectl "IDE" --port 1 --device 0 --type dvddrive --medium "$isoImage"
+VBoxManage modifyvm "$vmName" --boot1 disk
+VBoxManage modifyvm "$vmName" --boot2 dvd
 
 VBoxManage showvminfo "$vmName"
 VBoxManage startvm "$vmName"
