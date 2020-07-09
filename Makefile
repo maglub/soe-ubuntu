@@ -10,27 +10,34 @@
 
 MY_FILES = my_files
 
-RELEASE=18
+RELEASE=20
 
 ifeq ($(RELEASE),16)
 	BASE_VERSION = 16.04
 	VERSION = 16.04.5
-else
+	BASE_URL = http://mirror.init7.net/ubuntu-releases/$(BASE_VERSION)
+	DST_IMAGE = soe-ubuntu-$(VERSION).iso
+	BASE_IMAGE = ubuntu-$(VERSION)-server-amd64.iso
+endif
+
+ifeq ($(RELEASE),18)
 	BASE_VERSION = 18.04
 	VERSION = 18.04.2
-endif
-
-DST_IMAGE = soe-ubuntu-$(VERSION).iso
-BASE_IMAGE = ubuntu-$(VERSION)-server-amd64.iso
-
-#--- 16.04.1 use the following URL
-ifeq ($(BASE_VERSION),16.04)
-	BASE_URL = http://mirror.init7.net/ubuntu-releases/$(BASE_VERSION)
-else
-#--- 18.04.1 use the following URL
-#--- The Ubuntu 18 should be installed with the alternate installer
 	BASE_URL=http://cdimage.ubuntu.com/releases/$(BASE_VERSION)/release
+	DST_IMAGE = soe-ubuntu-$(VERSION).iso
+	BASE_IMAGE = ubuntu-$(VERSION)-server-amd64.iso
 endif
+
+ifeq ($(RELEASE),20)
+	BASE_VERSION = 20.04
+	VERSION = 20.04
+	BASE_URL=https://releases.ubuntu.com/$(BASE_VERSION)
+	DST_IMAGE = soe-ubuntu-$(VERSION).iso
+	BASE_IMAGE = ubuntu-$(BASE_VERSION)-live-server-amd64.iso
+endif
+
+#DST_IMAGE = soe-ubuntu-$(VERSION).iso
+#BASE_IMAGE = ubuntu-$(VERSION)-server-amd64.iso
 
 WORK_DIR = work.$(RELEASE)
 
@@ -41,8 +48,8 @@ SALT = saltsalt
 
 TIMEZONE = Europe/Zurich
 
-PROXY_URL = 10.0.20.5
-PROXY_PORT = 3142
+#PROXY_URL = 10.0.20.5
+#PROXY_PORT = 3142
 
 MNT_DIR = mnt
 
@@ -99,19 +106,24 @@ umount:
 work: $(WORK_DIR)/md5sum.txt
 
 soe: password_hash $(MNT_DIR)/md5sum.txt $(WORK_DIR)
-	cat $(MY_FILES)/$(BASE_VERSION)/kmg-ks.preseed | sed -e "s/XXX_USER_XXX/$(USER)/g" -e "s,XXX_PASSWORD_XXX,`cat password_hash`,g" -e "s,XXX_PUBLIC_KEY_XXX,`cat public_key`,g" -e "s,XXX_TIMEZONE_XXX,$(TIMEZONE),g" | sudo tee $(WORK_DIR)/kmg-ks.preseed
-	sudo cp $(MY_FILES)/$(BASE_VERSION)/show-ip-address $(WORK_DIR)/show-ip-address
+	cp  $(MY_FILES)/$(BASE_VERSION)/show-ip-address $(WORK_DIR)/show-ip-address
 
 #--- only for proxy based installations
 #	cat $(MY_FILES)/proxy.template | sed -e "s/XXX_PROXY_URL_XXX/$(PROXY_URL)/g" -e "s/XXX_PROXY_PORT_XXX/$(PROXY_PORT)/g" | sudo tee -a $(WORK_DIR)/kmg-ks.preseed
 
-	sudo cp $(MY_FILES)/isolinux/lang $(WORK_DIR)/isolinux
-	cat $(MY_FILES)/isolinux/txt.cfg | sed -e "s!XXX_PRESEED_CHECKSUM_XXX!`md5 -r $(WORK_DIR)/kmg-ks.preseed | cut -d" " -f 1`!" | sudo tee $(WORK_DIR)/isolinux/txt.cfg
-	cat $(MY_FILES)/$(BASE_VERSION)/grub.cfg | sed -e "s!XXX_PRESEED_CHECKSUM_XXX!`md5 -r $(WORK_DIR)/kmg-ks.preseed | cut -d" " -f 1`!" | sudo tee $(WORK_DIR)/boot/grub/grub.cfg
+	cp  $(MY_FILES)/$(BASE_VERSION)/isolinux/lang $(WORK_DIR)/isolinux
+	cat $(MY_FILES)/$(BASE_VERSION)/isolinux/txt.cfg | sed -e "s!XXX_PRESEED_CHECKSUM_XXX!`md5 -r $(WORK_DIR)/kmg-ks.preseed | cut -d" " -f 1`!" | tee $(WORK_DIR)/isolinux/txt.cfg
+	cat $(MY_FILES)/$(BASE_VERSION)/grub.cfg | sed -e "s!XXX_PRESEED_CHECKSUM_XXX!`md5 -r $(WORK_DIR)/kmg-ks.preseed | cut -d" " -f 1`!" | tee $(WORK_DIR)/boot/grub/grub.cfg
 
 	cat $(WORK_DIR)/isolinux/txt.cfg
 	cat $(WORK_DIR)/boot/grub/grub.cfg
 
+ifeq ($(RELEASE),20)
+	cp  $(MY_FILES)/$(BASE_VERSION)/user-data $(WORK_DIR)/
+	touch $(WORK_DIR)/meta-data
+else
+	cat $(MY_FILES)/$(BASE_VERSION)/kmg-ks.preseed | sed -e "s/XXX_USER_XXX/$(USER)/g" -e "s,XXX_PASSWORD_XXX,`cat password_hash`,g" -e "s,XXX_PUBLIC_KEY_XXX,`cat public_key`,g" -e "s,XXX_TIMEZONE_XXX,$(TIMEZONE),g" | tee $(WORK_DIR)/kmg-ks.preseed
+endif
 
 ifeq ($(OS),Darwin)
 	sudo mkisofs -D -r -V "Attendless_Ubuntu" -J -l -b isolinux/isolinux.bin -no-emul-boot -boot-load-size 4 -boot-info-table -z -iso-level 3 -c isolinux/isolinux.cat -o ./$(DST_IMAGE) $(WORK_DIR)
@@ -145,7 +157,8 @@ endif
 
 $(WORK_DIR)/md5sum.txt: $(MNT_DIR)
 	[ -d $(WORK_DIR) ] || mkdir $(WORK_DIR) || true
-	(cd mnt; sudo tar cf - .) | (cd $(WORK_DIR); pwd ; sudo tar xf - )
+	(cd mnt; sudo tar cf - .) | (cd $(WORK_DIR); pwd ; tar xf - )
+	chmod -R u+w $(WORK_DIR)
 
 $(WORK_DIR): $(WORK_DIR)/md5sum.txt 
 

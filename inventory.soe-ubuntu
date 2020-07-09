@@ -1,0 +1,34 @@
+#--- this inventory sets up systems for hybrid vagrant/ansible use
+#--- example: soe-v001local ansible_ssh_host=192.168.111.100 vagrant_image=kmggroup/soe-linux-kmg  vagrant_ram=512
+[vagrant_kitchen]
+build ansible_ssh_host=192.168.120.10 vagrant_image=kmggroup/soe-linux-u18  vagrant_ram=4096 vagrant_cpu=4 ansible_user=vagrant ansible_password=vagrant ansible_sudo_pass=vagrant vagrant_shared_dir_source=.. vagrant_shared_dir_dest=/soe-ubuntu
+soe-u20 ansible_ssh_host=192.168.120.11 vagrant_image=soe-ubuntu-20  vagrant_ram=1024 vagrant_cpu=4 ansible_user=vagrant ansible_password=vagrant ansible_sudo_pass=vagrant
+
+#--- The ubuntu group automatically inherits from the vagrant_kitchen group
+[ubuntu]
+[ubuntu:children]
+vagrant_kitchen
+#=========================================
+# The ansible_user=ops will require you to have a base image with
+# a user named "ops" for which you have configured access
+#=========================================
+[ubuntu:vars]
+ansible_user=vagrant
+#=========================================
+#--- The user_management group automatically inherits from the vagrant_kitchen group
+#=========================================
+[user_management]
+[user_management:children]
+vagrant_kitchen
+[soe]
+[soe:children]
+vagrant_kitchen
+#=========================================
+# Add interesting groups below here
+#=========================================
+#[my-group]
+#soe
+[kubernetesNodes]
+master
+#worker1
+#worker2
