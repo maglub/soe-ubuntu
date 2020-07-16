@@ -28,7 +28,5 @@ autoinstall:
   user-data:
     disable_root: false
   late-commands:
-    - 'sed -i "s/dhcp4: true/&\n      dhcp-identifier: mac/" /target/etc/netplan/00-installer-config.yaml'
-    - echo 'vagrant ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/ubuntu
-#    - sed -i -e 's/^GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT="net.ifnames=0 biosdevname=0"' >> /target/etc/default/grub
+    - echo 'ops ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/ubuntu
 
