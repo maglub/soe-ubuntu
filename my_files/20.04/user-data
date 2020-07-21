@@ -30,6 +30,6 @@ autoinstall:
   late-commands:
     - ln -s /usr/bin/python3 /target/usr/bin/python
     - echo 'ops ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/ubuntu
-    - mkdir -p /target/etc/ssh/sshd_configs.d
-    - echo 'MaxAuthTries 30' > /target/etc/ssh/sshd_configs.d/soe.conf
+    - mkdir -p /target/etc/ssh/sshd_config.d
+    - echo 'MaxAuthTries 30' > /target/etc/ssh/sshd_config.d/soe.conf
 
