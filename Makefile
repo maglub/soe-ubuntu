@@ -30,10 +30,10 @@ endif
 
 ifeq ($(RELEASE),20)
 	BASE_VERSION = 20.04
-	VERSION = 20.04
-	BASE_URL=https://releases.ubuntu.com/$(BASE_VERSION)
+	VERSION = 20.04.1
+	BASE_URL=https://releases.ubuntu.com/$(VERSION)
 	DST_IMAGE = soe-ubuntu-$(VERSION).iso
-	BASE_IMAGE = ubuntu-$(BASE_VERSION)-live-server-amd64.iso
+	BASE_IMAGE = ubuntu-$(VERSION)-live-server-amd64.iso
 endif
 
 #DST_IMAGE = soe-ubuntu-$(VERSION).iso
