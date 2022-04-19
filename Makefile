@@ -38,7 +38,7 @@ endif
 
 #--- https://releases.ubuntu.com/22.04/ubuntu-22.04-beta-live-server-amd64.iso
 ifeq ($(RELEASE),22)
-	BASE_VERSION = 22.04
+	BASE_VERSION = 22
 	VERSION = 22.04
 	BASE_URL=https://releases.ubuntu.com/$(VERSION)
 	DST_IMAGE = soe-ubuntu-$(VERSION).iso
@@ -120,9 +120,10 @@ soe: password_hash $(MNT_DIR)/md5sum.txt $(WORK_DIR)
 #--- only for proxy based installations
 #	cat $(MY_FILES)/proxy.template | sed -e "s/XXX_PROXY_URL_XXX/$(PROXY_URL)/g" -e "s/XXX_PROXY_PORT_XXX/$(PROXY_PORT)/g" | sudo tee -a $(WORK_DIR)/kmg-ks.preseed
 
+	[ -d $(WORK_DIR)/isolinux ] || mkdir $(WORK_DIR)/isolinux
 	cp  $(MY_FILES)/$(BASE_VERSION)/isolinux/lang $(WORK_DIR)/isolinux
-	cat $(MY_FILES)/$(BASE_VERSION)/isolinux/txt.cfg | sed -e "s!XXX_PRESEED_CHECKSUM_XXX!`md5 -r $(WORK_DIR)/kmg-ks.preseed | cut -d" " -f 1`!" | tee $(WORK_DIR)/isolinux/txt.cfg
-	cat $(MY_FILES)/$(BASE_VERSION)/grub.cfg | sed -e "s!XXX_PRESEED_CHECKSUM_XXX!`md5 -r $(WORK_DIR)/kmg-ks.preseed | cut -d" " -f 1`!" | tee $(WORK_DIR)/boot/grub/grub.cfg
+	cat $(MY_FILES)/$(BASE_VERSION)/isolinux/txt.cfg | sed -e "s!XXX_PRESEED_CHECKSUM_XXX!`md5sum -r $(WORK_DIR)/kmg-ks.preseed | cut -d" " -f 1`!" | tee $(WORK_DIR)/isolinux/txt.cfg
+	cat $(MY_FILES)/$(BASE_VERSION)/grub.cfg | sed -e "s!XXX_PRESEED_CHECKSUM_XXX!`md5sum -r $(WORK_DIR)/kmg-ks.preseed | cut -d" " -f 1`!" | tee $(WORK_DIR)/boot/grub/grub.cfg
 
 	cat $(WORK_DIR)/isolinux/txt.cfg
 	cat $(WORK_DIR)/boot/grub/grub.cfg

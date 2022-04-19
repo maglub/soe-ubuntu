@@ -1,0 +1,26 @@
+#!/bin/sh
+if [ "$METHOD" = loopback ]; then
+exit 0
+fi
+
+# Only run from ifup.
+if [ "$MODE" != start ]; then
+exit 0
+fi
+
+#--- if netplan is slowly giving an ip address, wait for it before continuing
+if [ -f /etc/netplan/01-netcfg.yaml ]
+then
+for n in 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+do
+  IP=$(/sbin/ip a | /bin/grep -v "127.0.0.1" | /usr/bin/awk '/inet / { print $2 }' | sed -e 's!/.*!!')
+  [ -n "$IP" ] && break
+  sleep 1 
+done
+fi
+
+IP=$(/sbin/ip a | /bin/grep -v "127.0.0.1" | /usr/bin/awk '/inet / { print $2 }' | sed -e 's!/.*!!')
+VERSION=$(. /etc/lsb-release ; echo $DISTRIB_DESCRIPTION)
+echo "IP: $IP" > /etc/issue
+echo "$VERSION \l" >> /etc/issue
+

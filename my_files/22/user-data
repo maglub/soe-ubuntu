@@ -1,0 +1,35 @@
+#cloud-config
+autoinstall:
+  version: 1
+  locale: en_US
+  keyboard:
+    layout: en
+    variant: us
+  network:
+    network:
+      version: 2
+      ethernets:
+        eth0:
+          dhcp4: true
+  storage:
+    layout:
+      name: lvm
+  identity:
+    hostname: ubuntu
+#    username: vagrant
+#    password: $6$T2Xzn.4a$Y4KSAwdcGOPlbonFDKsdjPQ.0TDLc27d4yCotdp68v4sYHwfVTLEjsf7CQF8yhTLvIj0e9NBrCMbqkz1cp/8z/
+    username: ops
+    password: $6$hk8.sNWeHnwek8gE$5LVic/GflTZrkmlYf8Pl.dNJdW8DvOOhRkhHR8D9TJUlrzKMTOVuD/KfmtsXV9qabPIdp14AY76JjyVt2ZLjF1
+#    username: ubuntu
+#    password: $6$rounds=4096$8dkK1P/oE$2DGKKt0wLlTVJ7USY.0jN9du8FetmEr51yjPyeiR.zKE3DGFcitNL/nF1l62BLJNR87lQZixObuXYny.Mf17K1
+
+  ssh:
+    install-server: yes
+  user-data:
+    disable_root: false
+  late-commands:
+    - ln -s /usr/bin/python3 /target/usr/bin/python
+    - echo 'ops ALL=(ALL) NOPASSWD:ALL' > /target/etc/sudoers.d/ubuntu
+    - mkdir -p /target/etc/ssh/sshd_config.d
+    - echo 'MaxAuthTries 30' > /target/etc/ssh/sshd_config.d/soe.conf
+
