@@ -39,7 +39,7 @@ endif
 #--- https://releases.ubuntu.com/22.04/ubuntu-22.04-beta-live-server-amd64.iso
 ifeq ($(RELEASE),22)
 	BASE_VERSION = 22.04
-	VERSION = 22.04.4
+	VERSION = 22.04
 	BASE_URL=https://releases.ubuntu.com/$(VERSION)
 	DST_IMAGE = soe-ubuntu-$(VERSION).iso
 	BASE_IMAGE = ubuntu-$(VERSION)-beta-live-server-amd64.iso
