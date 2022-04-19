@@ -10,7 +10,7 @@
 
 MY_FILES = my_files
 
-RELEASE=20
+RELEASE=22
 
 ifeq ($(RELEASE),16)
 	BASE_VERSION = 16.04
@@ -30,10 +30,19 @@ endif
 
 ifeq ($(RELEASE),20)
 	BASE_VERSION = 20.04
-	VERSION = 20.04.1
+	VERSION = 20.04.4
 	BASE_URL=https://releases.ubuntu.com/$(VERSION)
 	DST_IMAGE = soe-ubuntu-$(VERSION).iso
 	BASE_IMAGE = ubuntu-$(VERSION)-live-server-amd64.iso
+endif
+
+#--- https://releases.ubuntu.com/22.04/ubuntu-22.04-beta-live-server-amd64.iso
+ifeq ($(RELEASE),22)
+	BASE_VERSION = 22.04
+	VERSION = 22.04.4
+	BASE_URL=https://releases.ubuntu.com/$(VERSION)
+	DST_IMAGE = soe-ubuntu-$(VERSION).iso
+	BASE_IMAGE = ubuntu-$(VERSION)-beta-live-server-amd64.iso
 endif
 
 #DST_IMAGE = soe-ubuntu-$(VERSION).iso
